@@ -1,0 +1,58 @@
+     1                                  global _start
+     2                                  
+     3                                        extern printf
+     4                                        extern scanf
+     5                                  section .data
+     6 00000000 1F85EB51B81EF93F            val: dq 1.57  ;declare quad word (double precision)
+     7 00000008 1F85EB51B81E0940            val1: dq 3.14  ;declare quad word (double precision)
+     8 00000010 25660A00                    format  db     '%f', 10, 0
+     9 00000014 256600                      format1  db     '%f',0
+    10                                  
+    11                                  section .bss
+    12 00000000 <res 00000008>              res: resq 1     ;reserve 1 quad word for result
+    13                                  
+    14                                  section .text
+    15                                      _start:
+    16                                  
+    17 00000000 55                          push	rbp
+    18 00000001 4889E5                  	mov	rbp, rsp
+    19 00000004 4883EC10                	sub	rsp, 16
+    20                                  	;mov	rax, QWORD PTR fs:40
+    21 00000008 488945F8                	mov	qword [rbp-8], rax
+    22                                      ;mov	qword [rbp-8], rax
+    23 0000000C 31C0                    	xor	eax, eax
+    24 0000000E 660FEFC0                	pxor	xmm0, xmm0
+    25 00000012 F30F1145F4              	movss	dword  [rbp-12], xmm0
+    26                                  	;lea	rax, [rbp-16]
+    27                                      
+    28                                  	;mov	rsi, rax
+    29 00000017 488D75F4                    lea rsi, [rbp-12]
+    30 0000001B 48BF-                   	mov rdi, format1
+    31 0000001D [1400000000000000] 
+    32 00000025 B800000000                  mov rax, 0
+    33 0000002A E8(00000000)                call scanf
+    34 0000002F 4883C408                    add rsp, 8
+    35                                      ;movss	xmm0, dword [rbp-12]
+    36 00000033 F30F5AC0                	cvtss2sd	xmm0, xmm0
+    37                                  
+    38                                      ;sub rsp, 16
+    39                                      ;fld qword [val] ;load value into st0
+    40                                      ;fld qword [val1] ;load value into st0
+    41                                     ; fdiv           ;compute square root of st0 and store in st
+    42                                     ; fst qword [val]
+    43                                      ;movsd xmm0, qword [val]
+    44                                     ; fst qword [res] ;store st0 in result
+    45 00000037 48BF-                   	mov rdi, format
+    46 00000039 [1000000000000000] 
+    47 00000041 B801000000                  mov rax, 1
+    48 00000046 E8(00000000)                call printf
+    49                                  
+    50                                      ;mov rsp, rbp
+    51                                      ;push rbp
+    52                                      ;Exit (0) 
+    53 0000004B B83C000000                  mov rax, 60
+    54 00000050 BF00000000                  mov rdi, 0
+    55 00000055 0F05                        syscall
+    56                                  
+    57                                      ;end program
+    58                                  

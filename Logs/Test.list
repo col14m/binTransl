@@ -1,0 +1,35 @@
+     1                                  section .text
+     2                                  
+     3                                  global _start
+     4                                  _start:
+     5                                      ;fld    qword [double_value1]   ;push single_value1 to fpu stack
+     6                                      ;fld    qword [double_value1]   ;push double_value2 to fpu stack
+     7 00000000 DEC1                        fadd ;st0 := st1 + st0
+     8                                  
+     9                                      .Next:
+    10                                  
+    11 00000002 890425[69000000]            mov dword [val], eax
+    12 00000009 891C25[69000000]            mov dword [val], ebx
+    13 00000010 890C25[69000000]            mov dword [val], ecx
+    14 00000017 891425[69000000]            mov dword [val], edx
+    15 0000001E 893425[69000000]            mov dword [val], esi 
+    16 00000025 D90425[69000000]            fld dword [val]
+    17 0000002C D91C25[69000000]            fstp dword [val]
+    18 00000033 8B1C25[69000000]            mov ebx, dword [val]
+    19 0000003A 8B0C25[69000000]            mov ecx, dword [val]
+    20 00000041 8B1425[69000000]            mov edx, dword [val]
+    21 00000048 8B3425[69000000]            mov esi, dword [val]
+    22                                      ;mov rbx, 60
+    23                                      ;mov rdi, 0
+    24 0000004F 89C3                        mov ebx, eax
+    25 00000051 75AF                        jne .Next
+    26 00000053 0F05                        syscall
+    27 00000055 B83C000000                  mov eax, 60
+    28 0000005A BF00000000                  mov edi, 0
+    29 0000005F 0F05                        syscall
+    30                                  
+    31                                  ;section .data
+    32                                     ; format  db     '%lg', 10, 0
+    33 00000061 6666666666965940           double_value1   dq 102.35
+    34 00000069 0A00                       val dw 10
+    35                                     ; double_value2   dq 12.34
